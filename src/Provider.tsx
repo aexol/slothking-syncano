@@ -6,7 +6,7 @@ export let s: {
   post: (endpoint: string, options: object) => Promise<any>;
   setToken: (token: string) => void;
 };
-type SyncanoProviderProps = ProviderProps & {
+export type SyncanoProviderProps = ProviderProps & {
   instanceName: string;
 };
 
