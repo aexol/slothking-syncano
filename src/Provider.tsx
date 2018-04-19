@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Provider, ProviderProps } from 'unstated';
-import Syncano from '@syncano/client';
+import * as Syncano from '@syncano/client';
 
 export let s: {
   post: (endpoint: string, options: object) => Promise<any>;
