@@ -1,11 +1,15 @@
-import { Syncano } from './Syncano';
+import { SyncanoContainer, SyncanoType } from './Syncano';
 import * as Cookies from 'js-cookie';
 export type AuthState = {
   valid?: boolean;
   token?: string;
   username?: string;
 };
-export class Auth extends Syncano<AuthState> {
+export class Auth extends SyncanoContainer<AuthState> {
+  constructor(s?: SyncanoType) {
+    super(s);
+    this.validate();
+  }
   save = (name: string, value: string) => {
     Cookies.set(name, value);
   };
@@ -16,16 +20,12 @@ export class Auth extends Syncano<AuthState> {
     Cookies.remove(name);
   };
   state = {
-    ...super.state,
     valid: false,
     token: this.load('token'),
-    username: this.load('username')
+    username: this.load('username'),
+    s: null
   };
-  constructor(props) {
-    super(props);
-    this.validate();
-  }
-  login = (username: string, password: string) => {
+  login = ({ username, password }: { username: string; password: string }) => {
     this.s.post('rest-auth/login', { username, password }).then(({ token }) => {
       if (token) {
         this.save('token', token);
@@ -48,7 +48,7 @@ export class Auth extends Syncano<AuthState> {
       username: null
     });
   };
-  private validate() {
+  validate = () => {
     const { token, username } = this.state;
     if (token && username) {
       this.s
@@ -69,5 +69,5 @@ export class Auth extends Syncano<AuthState> {
         valid: false
       });
     }
-  }
+  };
 }

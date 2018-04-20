@@ -1,4 +1,4 @@
-import { Syncano } from './Syncano';
+import { SyncanoType, SyncanoContainer } from './Syncano';
 export type RestModel = {
   id: number;
   [x: string]: any;
@@ -8,11 +8,13 @@ export type RestState = {
   models: {
     [x: string]: Array<RestModel>;
   };
+  s:SyncanoType;
 };
-export class Rest extends Syncano<RestState> {
+export class Rest extends SyncanoContainer<RestState>{
   state = {
     isAdmin: null,
-    models: {}
+    models: {},
+    s:null
   };
   isAdmin = () => {
     if (this.state.isAdmin === null) {
