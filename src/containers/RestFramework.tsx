@@ -1,6 +1,4 @@
-import { Container } from 'unstated';
-import { syncano} from '..';
-let { s } = syncano
+import { Syncano } from './Syncano';
 export type RestModel = {
   id: number;
   [x: string]: any;
@@ -11,14 +9,14 @@ export type RestState = {
     [x: string]: Array<RestModel>;
   };
 };
-export class Rest extends Container<RestState> {
+export class Rest extends Syncano<RestState> {
   state = {
     isAdmin: null,
     models: {}
   };
   isAdmin = () => {
     if (this.state.isAdmin === null) {
-      s.post('rest-framework/isAdmin', {}).then((isAdmin) =>
+      this.s.post('rest-framework/isAdmin', {}).then((isAdmin) =>
         this.setState({
           isAdmin
         })
@@ -27,7 +25,7 @@ export class Rest extends Container<RestState> {
   };
   list = (model: string, refresh = false) => {
     if (!this.state.models[model] || refresh) {
-      s.post('rest-framework/list', { model }).then((objects: Array<RestModel>) => {
+      this.s.post('rest-framework/list', { model }).then((objects: Array<RestModel>) => {
         this.setState({
           models: {
             ...this.state.models,
@@ -38,7 +36,7 @@ export class Rest extends Container<RestState> {
     }
   };
   add = (model: string, data: object) => {
-    return s.post('rest-framework/add', { model, ...data }).then((obj: RestModel) => {
+    return this.s.post('rest-framework/add', { model, ...data }).then((obj: RestModel) => {
       this.setState({
         models: {
           ...this.state.models,
@@ -48,7 +46,7 @@ export class Rest extends Container<RestState> {
     });
   };
   remove = (model: string, id: number) => {
-    return s.post('rest-framework/remove', { model, id }).then((obj) => {
+    return this.s.post('rest-framework/remove', { model, id }).then((obj) => {
       this.setState({
         models: {
           ...this.state.models,
@@ -58,7 +56,7 @@ export class Rest extends Container<RestState> {
     });
   };
   update = (model: string, id: number, data: object) => {
-    return s.post('rest-framework/update', { model, id, ...data }).then((obj: RestModel) => {
+    return this.s.post('rest-framework/update', { model, id, ...data }).then((obj: RestModel) => {
       this.setState({
         models: {
           ...this.state.models,

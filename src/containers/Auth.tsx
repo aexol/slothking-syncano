@@ -1,14 +1,11 @@
-import { Container } from 'unstated';
+import { Syncano } from './Syncano';
 import * as Cookies from 'js-cookie';
-import { syncano } from '..';
-let { s } = syncano;
 export type AuthState = {
   valid?: boolean;
   token?: string;
   username?: string;
 };
-
-export class Auth extends Container<AuthState> {
+export class Auth extends Syncano<AuthState> {
   save = (name: string, value: string) => {
     Cookies.set(name, value);
   };
@@ -19,21 +16,21 @@ export class Auth extends Container<AuthState> {
     Cookies.remove(name);
   };
   state = {
+    ...super.state,
     valid: false,
     token: this.load('token'),
     username: this.load('username')
   };
   constructor(props) {
-    super();
-    console.log(props)
+    super(props);
     this.validate();
   }
   login = (username: string, password: string) => {
-    s.post('rest-auth/login', { username, password }).then(({ token }) => {
+    this.s.post('rest-auth/login', { username, password }).then(({ token }) => {
       if (token) {
         this.save('token', token);
         this.save('username', username);
-        s.setToken(token);
+        this.s.setToken(token);
         this.setState({
           username,
           token,
@@ -54,7 +51,7 @@ export class Auth extends Container<AuthState> {
   private validate() {
     const { token, username } = this.state;
     if (token && username) {
-      s
+      this.s
         .post('rest-auth/validate', {
           username,
           token
@@ -64,7 +61,7 @@ export class Auth extends Container<AuthState> {
             valid
           });
           if (valid) {
-            s.setToken(token);
+            this.s.setToken(token);
           }
         });
     } else {
