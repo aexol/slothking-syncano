@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Provider, ProviderProps } from 'unstated';
 import * as Syncano from '@syncano/client';
 
-export let syncano: {
+export var syncano: {
   s?: {
     post: (endpoint: string, options: object) => Promise<any>;
     setToken: (token: string) => void;
