@@ -23,8 +23,9 @@ export class Auth extends Container<AuthState> {
     token: this.load('token'),
     username: this.load('username')
   };
-  constructor() {
+  constructor(props) {
     super();
+    console.log(props)
     this.validate();
   }
   login = (username: string, password: string) => {
