@@ -1,6 +1,7 @@
 import { Container } from 'unstated';
 import * as Cookies from 'js-cookie';
-import { s } from '..';
+import { syncano} from '..';
+let { s } = syncano
 export type AuthState = {
   valid?: boolean;
   token?: string;

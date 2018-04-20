@@ -1,5 +1,6 @@
 import { Container } from 'unstated';
-import { s } from '..';
+import { syncano} from '..';
+let { s } = syncano
 export type RestModel = {
   id: number;
   [x: string]: any;
