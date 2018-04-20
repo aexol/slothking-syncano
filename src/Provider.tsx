@@ -3,11 +3,11 @@ import { Provider, ProviderProps } from 'unstated';
 import * as Syncano from '@syncano/client';
 
 export let syncano: {
-  s?:{
+  s?: {
     post: (endpoint: string, options: object) => Promise<any>;
     setToken: (token: string) => void;
-  }
-};
+  };
+} = {};
 export type SyncanoProviderProps = ProviderProps & {
   instanceName: string;
 };
