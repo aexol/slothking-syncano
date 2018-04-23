@@ -2,26 +2,25 @@ import * as React from 'react';
 import { Provider, ProviderProps } from 'unstated';
 import { Auth, Rest, SyncanoContainer } from './containers';
 import * as SyncanoClient from '@syncano/client';
-export interface SyncanoContainerType {
-  new(s?: any): SyncanoContainer<any>;
+
+export type SyncanoContainerType<State extends object> = {
+  new (s?: any): SyncanoContainer<State>;
 };
 export type SyncanoProviderProps = ProviderProps & {
   instanceName: string;
-  syncanoContainers?: {
-    [x: string]: SyncanoContainerType;
-  };
+  syncanoContainers?: Array<SyncanoContainerType<any>>;
 };
 
 export const SyncanoProvider = ({
   instanceName,
-  syncanoContainers = {},
+  syncanoContainers = [],
   ...props
 }: SyncanoProviderProps) => {
-  let injected = { Auth, Rest, ...syncanoContainers };
+  let injected = [Auth, Rest, ...syncanoContainers];
   let inj = [];
   let sync = SyncanoClient(instanceName);
-  for (var k of Object.keys(injected)) {
-    inj.push(new injected[k](sync));
+  for (var k of injected) {
+    inj.push(new k(sync));
   }
   return <Provider inject={inj} {...props} />;
 };
