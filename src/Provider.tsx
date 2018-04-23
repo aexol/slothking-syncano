@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { Provider, ProviderProps, Container } from 'unstated';
-import { Auth, Rest } from './containers';
+import { Provider, ProviderProps } from 'unstated';
+import { Auth, Rest, SyncanoContainer } from './containers';
 import * as SyncanoClient from '@syncano/client';
 export type SyncanoProviderProps = ProviderProps & {
   instanceName: string;
   syncanoContainers?: {
-    [x: string]: Container<any>;
+    [x: string]: SyncanoContainer<any>;
   };
 };
 export const SyncanoProvider = ({
