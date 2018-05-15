@@ -8,13 +8,34 @@ export type RestState = {
   models: {
     [x: string]: Array<RestModel>;
   };
-  s:SyncanoType;
+  s: SyncanoType;
 };
-export class Rest extends SyncanoContainer<RestState>{
+
+export const toFormData = (obj) => {
+  var fd = new FormData();
+  let isFd = false;
+  var formKey;
+  for (var property in obj) {
+    if (obj.hasOwnProperty(property)) {
+      formKey = property;
+      if (typeof obj[property] === 'object' && !(obj[property] instanceof File)) {
+        fd.append(formKey, JSON.stringify(obj));
+      } else {
+        fd.append(formKey, obj[property]);
+      }
+      if (obj[property] instanceof File) {
+        isFd = true;
+      }
+    }
+  }
+  return isFd ? fd : obj;
+};
+
+export class Rest extends SyncanoContainer<RestState> {
   state = {
     isAdmin: null,
     models: {},
-    s:null
+    s: null
   };
   isAdmin = () => {
     if (this.state.isAdmin === null) {
@@ -38,14 +59,16 @@ export class Rest extends SyncanoContainer<RestState>{
     }
   };
   add = (model: string, data: object) => {
-    return this.s.post('rest-framework/add', { model, ...data }).then((obj: RestModel) => {
-      this.setState({
-        models: {
-          ...this.state.models,
-          [model]: [...this.state.models[model], obj]
-        }
+    return this.s
+      .post('rest-framework/add', toFormData({ model, ...data }))
+      .then((obj: RestModel) => {
+        this.setState({
+          models: {
+            ...this.state.models,
+            [model]: [...this.state.models[model], obj]
+          }
+        });
       });
-    });
   };
   remove = (model: string, id: number) => {
     return this.s.post('rest-framework/remove', { model, id }).then((obj) => {
@@ -58,13 +81,15 @@ export class Rest extends SyncanoContainer<RestState>{
     });
   };
   update = (model: string, id: number, data: object) => {
-    return this.s.post('rest-framework/update', { model, id, ...data }).then((obj: RestModel) => {
-      this.setState({
-        models: {
-          ...this.state.models,
-          [model]: this.state.models[model].map((m) => (m.id === obj.id ? obj : m))
-        }
+    return this.s
+      .post('rest-framework/update', toFormData({ model, id, ...data }))
+      .then((obj: RestModel) => {
+        this.setState({
+          models: {
+            ...this.state.models,
+            [model]: this.state.models[model].map((m) => (m.id === obj.id ? obj : m))
+          }
+        });
       });
-    });
   };
 }
