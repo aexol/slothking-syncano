@@ -1,6 +1,6 @@
 {
   "name": "@aexol/slothking-syncano",
-  "version": "0.1.26",
+  "version": "0.1.27",
   "private": false,
   "description": "Slothking syncano unstated containers",
   "main": "lib/index.js",
